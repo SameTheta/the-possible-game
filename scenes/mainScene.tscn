@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://cotc0ty1s1vuw"]
+
+[ext_resource type="PackedScene" uid="uid://clhsu5bwjc545" path="res://scenes/player.tscn" id="1_5a5hq"]
+[ext_resource type="Script" path="res://scripts/mainScene.gd" id="1_5gaqc"]
+[ext_resource type="PackedScene" uid="uid://os71qhhx0r7m" path="res://scenes/coin.tscn" id="2_47usi"]
+[ext_resource type="PackedScene" uid="uid://cl7ysebng8rc" path="res://scenes/Enemy.tscn" id="4_lf4vt"]
+[ext_resource type="PackedScene" uid="uid://bk4h7vmlfmpua" path="res://scenes/HUD.tscn" id="5_cf0ll"]
+
+[node name="MainGame" type="Node2D"]
+script = ExtResource("1_5gaqc")
+coinScene = ExtResource("2_47usi")
+
+[node name="PlayerNode" parent="." instance=ExtResource("1_5a5hq")]
+z_index = 1
+position = Vector2(603, 568)
+
+[node name="PlayerStartPos" type="Marker2D" parent="."]
+position = Vector2(603, 568)
+metadata/_edit_lock_ = true
+
+[node name="EnemyNode" parent="." instance=ExtResource("4_lf4vt")]
+position = Vector2(603, 100)
+gravity_scale = 0.0
+
+[node name="EnemyStartPos" type="Marker2D" parent="."]
+position = Vector2(603, 100)
+metadata/_edit_lock_ = true
+
+[node name="Coin" parent="." instance=ExtResource("2_47usi")]
+position = Vector2(-150, 0)
+
+[node name="HUD" parent="." instance=ExtResource("5_cf0ll")]
+
+[connection signal="killPlayer" from="." to="PlayerNode" method="_on_main_game_kill_player"]
+[connection signal="body_touched" from="PlayerNode" to="." method="playerTouchedCoin"]
+[connection signal="playerKilled" from="PlayerNode" to="." method="game_over"]
+[connection signal="hitPlayer" from="EnemyNode" to="PlayerNode" method="killPlayer"]
+[connection signal="start_game" from="HUD" to="." method="new_game"]
